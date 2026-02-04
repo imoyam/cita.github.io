@@ -41,7 +41,41 @@
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
+        #photo-banner {
+            position: fixed;
+            bottom: 30px; /* Espacio desde abajo */
+            left: 0;
+            width: 100%;
+            height: 120px; /* Altura de la cinta */
+            overflow: hidden;
+            z-index: 20; /* Por encima del fondo */
+            transition: opacity 0.8s ease; /* Para que desaparezca suave */
+            pointer-events: none; /* Para que no interfiera con clicks */
+        }
 
+        .banner-track {
+            display: flex;
+            width: max-content; /* El ancho se adapta al contenido */
+            /* La animación mueve la pista la mitad de su longitud total */
+            animation: scroll-left 20s linear infinite; 
+        }
+
+        .banner-photo {
+            height: 120px; /* Ajustar a la altura del contenedor */
+            width: auto; /* Mantiene proporción */
+            margin-right: 20px; /* Espacio entre fotos */
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0.9;
+        }
+
+        /* Animación para mover la cinta a la izquierda */
+        @keyframes scroll-left {
+            0% { transform: translateX(0); }
+            /* IMPORTANTE: Se mueve -50% porque duplicamos las fotos. 
+               Al llegar a la mitad, es idéntico al inicio y se reinicia invisiblemente. */
+            100% { transform: translateX(-50%); }
+        }
         /* Contenedor principal */
         .container {
             position: relative;
