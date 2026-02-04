@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para ti ❤️</title>
+    <title>P ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -46,15 +46,14 @@
             width: 100%;
             height: 120px;
             overflow: hidden;
-            z-index: 20;
-            pointer-events: none;
+            z-index: 50; /* Muy visible al inicio */
             transition: opacity 0.5s ease;
         }
 
         .banner-track-horizontal {
             display: flex;
             width: max-content;
-            animation: scroll-left 60s linear infinite; 
+            animation: scroll-left 40s linear infinite; 
         }
 
         .banner-photo-h {
@@ -63,7 +62,7 @@
             margin-right: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            opacity: 0.9;
+            opacity: 0.95;
         }
 
         @keyframes scroll-left {
@@ -71,48 +70,53 @@
             100% { transform: translateX(-50%); }
         }
 
-
-        /* --- CINTAS VERTICALES LATERALES (Principales) --- */
+        /* --- CINTAS VERTICALES LATERALES (CORREGIDAS) --- */
         .side-ribbon {
             position: fixed;
             top: 0;
-            width: 90px;
             height: 100vh;
+            width: 130px; /* Hacemos la cinta más ancha para que se vea bien */
             overflow: hidden;
-            z-index: 25;
-            pointer-events: none;
-            opacity: 0.8;
-            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 20; /* Capa intermedia: encima del fondo, debajo del texto */
+            opacity: 0; /* Invisibles al principio */
+            transition: all 1s ease-out; /* Transición suave */
+            background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
         }
 
         #left-ribbon {
             left: 0;
-            transform: translateX(-150%);
-            border-right: 2px solid rgba(255,255,255,0.3);
+            transform: translateX(-100%); /* Escondido a la izquierda */
+            border-right: 3px solid rgba(255, 255, 255, 0.4);
         }
 
         #right-ribbon {
             right: 0;
-            transform: translateX(150%);
-            border-left: 2px solid rgba(255,255,255,0.3);
+            transform: translateX(100%); /* Escondido a la derecha */
+            border-left: 3px solid rgba(255, 255, 255, 0.4);
         }
 
-        .side-ribbon.active-ribbon {
-            transform: translateX(0);
+        /* Clase para MOSTRAR las cintas */
+        .side-ribbon.visible-ribbon {
+            opacity: 1;
+            transform: translateX(0); /* Vuelven a su posición original (0) */
         }
 
         .banner-track-vertical {
             display: flex;
             flex-direction: column;
-            animation: scroll-up 30s linear infinite; 
+            width: 100%;
+            /* Animación hacia arriba */
+            animation: scroll-up 25s linear infinite; 
         }
 
         .banner-photo-v {
-            width: 100%;
+            width: 110px; /* Ajustado al contenedor */
             height: auto;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: 0 auto 20px auto; /* Centrado horizontal */
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid white;
         }
 
         @keyframes scroll-up {
@@ -120,28 +124,23 @@
             100% { transform: translateY(-50%); }
         }
 
-
-        /* --- CONTENEDOR PRINCIPAL --- */
+        /* --- CONTENEDOR CENTRAL --- */
         .container {
             position: relative;
-            z-index: 30;
+            z-index: 30; /* Encima de las cintas */
             width: 100%;
             height: 100vh;
             display: grid;
             place-items: center;
+            pointer-events: none; /* Permite clicks en elementos traseros si no hay nada aquí */
         }
 
-        #scene-intro, #scene-question {
+        #scene-intro {
             grid-area: 1 / 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        #scene-intro {
-            cursor: pointer;
+            pointer-events: auto; /* Reactivamos clicks */
             transition: transform 0.8s ease, opacity 0.8s ease;
         }
 
@@ -152,17 +151,7 @@
             filter: drop-shadow(0 10px 15px rgba(255, 77, 109, 0.4));
             animation: latido 1.5s infinite;
         }
-
-        .click-hint {
-            color: white;
-            font-weight: bold;
-            font-size: 1.2rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            pointer-events: none;
-            margin-top: -40px;
-            text-align: center;
-        }
-
+        
         @keyframes latido {
             0% { transform: scale(1); }
             15% { transform: scale(1.1); }
@@ -171,122 +160,77 @@
             100% { transform: scale(1); }
         }
 
-        .fade-out-up {
-            transform: translateY(-100px) scale(0.8);
-            opacity: 0 !important;
-            pointer-events: none;
-        }
-        
-        .fade-out {
-            opacity: 0 !important;
+        .click-hint {
+            color: white; font-weight: bold; font-size: 1.2rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-top: -40px;
         }
 
-        /* --- Escena 2: Pregunta --- */
+        .fade-out { opacity: 0 !important; pointer-events: none; }
+        .fade-out-up { transform: translateY(-100px) scale(0.8); opacity: 0 !important; pointer-events: none; }
+
+        /* --- ESCENA PREGUNTA --- */
         #scene-question {
+            grid-area: 1 / 1;
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s ease;
-            max-width: 600px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 40; /* Muy arriba */
         }
 
         .question-box {
+            pointer-events: auto; /* Reactivamos clicks */
             padding: 40px;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.85); /* Fondo más sólido para leer */
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
             text-align: center;
-            width: 80%;
         }
 
-        .visible {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
+        .visible { opacity: 1 !important; pointer-events: auto !important; }
 
         #typing-text {
-            font-size: 2rem;
-            color: var(--text-color);
-            font-weight: 700;
-            min-height: 80px;
-            margin-bottom: 30px;
+            font-size: 2rem; color: var(--text-color); font-weight: 700;
+            min-height: 80px; margin-bottom: 30px;
         }
 
         .btn-group {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            opacity: 0; 
-            transition: opacity 0.5s ease;
+            display: flex; justify-content: center; gap: 20px;
+            opacity: 0; transition: opacity 0.5s ease;
         }
 
         .btn {
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            color: white;
-            font-weight: bold;
-            transition: transform 0.2s;
+            padding: 15px 40px; font-size: 1.2rem; border: none; border-radius: 50px;
+            cursor: pointer; color: white; font-weight: bold; transition: transform 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-
         .btn:hover { transform: scale(1.1); }
         .btn-yes { background-color: var(--btn-yes); }
         .btn-no { background-color: var(--btn-no); }
 
-        /* --- ESTILOS DEL MODAL (ACTUALIZADOS) --- */
+        /* --- MODAL CONFIRMACIÓN --- */
         #modal-confirm {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); /* Fondo un poco más oscuro */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100;
         }
+        #modal-confirm.show-modal { opacity: 1; pointer-events: auto; }
 
-        #modal-confirm.show-modal {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        /* Contenedor flexible para alinear cintas y contenido central */
         .modal-flex-wrapper {
-            display: flex;
-            align-items: stretch; /* Estira las cintas a la altura del contenido */
-            background: white;
-            border-radius: 15px;
-            overflow: hidden; /* Para recortar las esquinas de las cintas */
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-            max-height: 70vh; /* Altura máxima del modal */
+            display: flex; align-items: stretch; background: white;
+            border-radius: 15px; overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3); max-height: 70vh;
         }
-
-        /* Contenedor central blanco */
         .modal-content-center {
-            padding: 30px;
-            text-align: center;
-            width: 300px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            z-index: 2;
-            background: white;
+            padding: 30px; width: 300px; display: flex;
+            flex-direction: column; justify-content: center; text-align: center;
         }
-        
-        /* Contenedores de las cintas laterales del modal */
         .modal-ribbon-container {
-            width: 70px; /* Ancho de las cintas del modal */
-            overflow: hidden;
-            position: relative;
-            background: #fff0f3; /* Fondo rosito claro para las cintas */
+            width: 70px; overflow: hidden; position: relative; background: #fff0f3;
         }
-
-        .modal-content-center h3 { color: var(--text-color); margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -302,14 +246,14 @@
 
     <div id="left-ribbon" class="side-ribbon">
         <div class="banner-track-vertical">
-            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
-            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
         </div>
     </div>
+
     <div id="right-ribbon" class="side-ribbon">
-        <div class="banner-track-vertical">
-            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
-            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+        <div class="banner-track-vertical" style="animation-direction: reverse;"> <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
         </div>
     </div>
 
@@ -335,32 +279,28 @@
 
     <div id="modal-confirm">
         <div class="modal-flex-wrapper">
-            
             <div class="modal-ribbon-container left">
-                <div class="banner-track-vertical" style="animation-duration: 25s;"> <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v">
-                    <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v">
+                <div class="banner-track-vertical" style="animation-duration: 15s;">
+                    <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v">
                 </div>
             </div>
-
             <div class="modal-content-center">
                 <h3>¿Segura? :c</h3>
                 <div style="display: flex; justify-content: space-around;">
-                    <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí</button>
-                    <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No</button>
+                    <button class="btn btn-yes" onclick="irPaginaTriste()" style="padding: 10px 20px;">Sí</button>
+                    <button class="btn btn-no" onclick="cerrarModal()" style="padding: 10px 20px;">No</button>
                 </div>
             </div>
-
             <div class="modal-ribbon-container right">
-                <div class="banner-track-vertical" style="animation-duration: 28s;">
-                     <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
-                    <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+                <div class="banner-track-vertical" style="animation-duration: 18s;">
+                    <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
                 </div>
             </div>
-
         </div>
     </div>
+
     <script>
-        // --- LOGICA LLUVIA ---
+        // --- LLUVIA ---
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart-rain');
@@ -378,29 +318,32 @@
         const bannerBottom = document.getElementById('photo-banner-bottom');
         const ribbonLeft = document.getElementById('left-ribbon');
         const ribbonRight = document.getElementById('right-ribbon');
-        
         const question = document.getElementById('scene-question');
         const textElement = document.getElementById('typing-text');
         const buttons = document.getElementById('buttons');
         const modal = document.getElementById('modal-confirm');
         const message = "¿Te gustaría ser mi San Valentín? 🌹";
 
-        // --- TRANSICIÓN ---
+        // --- TRANSICIÓN PRINCIPAL ---
         intro.addEventListener('click', () => {
+            // 1. Ocultar Escena 1
             intro.classList.add('fade-out-up');
-            bannerBottom.classList.add('fade-out'); 
-            ribbonLeft.classList.add('active-ribbon');
-            ribbonRight.classList.add('active-ribbon');
+            bannerBottom.classList.add('fade-out');
 
+            // 2. MOSTRAR CINTAS LATERALES (Añadimos clase 'visible-ribbon')
+            ribbonLeft.classList.add('visible-ribbon');
+            ribbonRight.classList.add('visible-ribbon');
+
+            // 3. Mostrar Escena 2
             setTimeout(() => {
                 intro.style.display = 'none';
-                bannerBottom.style.display = 'none'; 
+                bannerBottom.style.display = 'none';
                 question.classList.add('visible');
                 typeWriter();
-            }, 1000);
+            }, 800);
         });
 
-        // --- MÁQUINA DE ESCRIBIR ---
+        // --- TEXTO ---
         let i = 0;
         function typeWriter() {
             if (i < message.length) {
@@ -415,25 +358,15 @@
         // --- BOTONES ---
         function aceptar() {
             const title = "Cita de San Valentín ❤️";
-            const start = "20260214"; 
-            const end = "20260215"; 
-            const details = "¡Dijiste que sí!";
-            const location = "Lugar Sorpresa";
+            const start = "20260214"; const end = "20260215";
+            const details = "¡Dijiste que sí!"; const location = "Lugar Sorpresa";
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
             window.open(url, '_blank');
         }
 
-        function confirmarRechazo() {
-            modal.classList.add('show-modal');
-        }
-
-        function cerrarModal() {
-            modal.classList.remove('show-modal');
-        }
-
-        function irPaginaTriste() {
-            window.location.href = "./no.html";
-        }
+        function confirmarRechazo() { modal.classList.add('show-modal'); }
+        function cerrarModal() { modal.classList.remove('show-modal'); }
+        function irPaginaTriste() { window.location.href = "./no.html"; }
     </script>
 </body>
 </html>
