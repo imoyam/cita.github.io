@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>P ❤️</title>
+    <title>Para ti ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -38,7 +38,7 @@
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- CINTA HORIZONTAL INFERIOR (Inicio) --- */
+        /* --- CINTA HORIZONTAL INFERIOR (Solo Scene 1) --- */
         #photo-banner-bottom {
             position: fixed;
             bottom: 30px;
@@ -46,7 +46,7 @@
             width: 100%;
             height: 120px;
             overflow: hidden;
-            z-index: 50; /* Muy visible al inicio */
+            z-index: 50;
             transition: opacity 0.5s ease;
         }
 
@@ -70,49 +70,49 @@
             100% { transform: translateX(-50%); }
         }
 
-        /* --- CINTAS VERTICALES LATERALES (CORREGIDAS) --- */
+        /* --- CINTAS VERTICALES LATERALES (Solo Scene 2) --- */
         .side-ribbon {
             position: fixed;
             top: 0;
             height: 100vh;
-            width: 130px; /* Hacemos la cinta más ancha para que se vea bien */
+            width: 130px; /* Ancho suficiente para ver bien las fotos */
             overflow: hidden;
-            z-index: 20; /* Capa intermedia: encima del fondo, debajo del texto */
+            z-index: 20; /* Detrás de la pregunta, encima del fondo */
             opacity: 0; /* Invisibles al principio */
-            transition: all 1s ease-out; /* Transición suave */
-            background: rgba(255, 255, 255, 0.1); /* Fondo sutil */
+            transition: all 1s ease-out;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         #left-ribbon {
             left: 0;
-            transform: translateX(-100%); /* Escondido a la izquierda */
-            border-right: 3px solid rgba(255, 255, 255, 0.4);
+            transform: translateX(-100%); /* Oculto a la izquierda */
+            border-right: 2px solid rgba(255, 255, 255, 0.4);
         }
 
         #right-ribbon {
             right: 0;
-            transform: translateX(100%); /* Escondido a la derecha */
-            border-left: 3px solid rgba(255, 255, 255, 0.4);
+            transform: translateX(100%); /* Oculto a la derecha */
+            border-left: 2px solid rgba(255, 255, 255, 0.4);
         }
 
-        /* Clase para MOSTRAR las cintas */
+        /* Clase para activar las cintas */
         .side-ribbon.visible-ribbon {
             opacity: 1;
-            transform: translateX(0); /* Vuelven a su posición original (0) */
+            transform: translateX(0);
         }
 
         .banner-track-vertical {
             display: flex;
             flex-direction: column;
             width: 100%;
-            /* Animación hacia arriba */
-            animation: scroll-up 25s linear infinite; 
+            /* Animación lenta para que se aprecien las fotos */
+            animation: scroll-up 35s linear infinite; 
         }
 
         .banner-photo-v {
-            width: 110px; /* Ajustado al contenedor */
+            width: 110px;
             height: auto;
-            margin: 0 auto 20px auto; /* Centrado horizontal */
+            margin: 0 auto 20px auto;
             display: block;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
@@ -127,12 +127,12 @@
         /* --- CONTENEDOR CENTRAL --- */
         .container {
             position: relative;
-            z-index: 30; /* Encima de las cintas */
+            z-index: 30;
             width: 100%;
             height: 100vh;
             display: grid;
             place-items: center;
-            pointer-events: none; /* Permite clicks en elementos traseros si no hay nada aquí */
+            pointer-events: none; 
         }
 
         #scene-intro {
@@ -140,7 +140,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            pointer-events: auto; /* Reactivamos clicks */
+            pointer-events: auto;
             transition: transform 0.8s ease, opacity 0.8s ease;
         }
 
@@ -176,16 +176,16 @@
             transition: opacity 1s ease;
             max-width: 500px;
             width: 90%;
-            z-index: 40; /* Muy arriba */
+            z-index: 40; /* Por encima de las cintas laterales */
         }
 
         .question-box {
-            pointer-events: auto; /* Reactivamos clicks */
+            pointer-events: auto;
             padding: 40px;
-            background: rgba(255, 255, 255, 0.85); /* Fondo más sólido para leer */
+            background: rgba(255, 255, 255, 0.9); /* Fondo blanco casi sólido */
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
             text-align: center;
         }
 
@@ -210,27 +210,25 @@
         .btn-yes { background-color: var(--btn-yes); }
         .btn-no { background-color: var(--btn-no); }
 
-        /* --- MODAL CONFIRMACIÓN --- */
+        /* --- MODAL CONFIRMACIÓN (SIMPLE, SIN FOTOS) --- */
         #modal-confirm {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.5);
             display: flex; justify-content: center; align-items: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 100;
         }
         #modal-confirm.show-modal { opacity: 1; pointer-events: auto; }
 
-        .modal-flex-wrapper {
-            display: flex; align-items: stretch; background: white;
-            border-radius: 15px; overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.3); max-height: 70vh;
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            max-width: 300px;
         }
-        .modal-content-center {
-            padding: 30px; width: 300px; display: flex;
-            flex-direction: column; justify-content: center; text-align: center;
-        }
-        .modal-ribbon-container {
-            width: 70px; overflow: hidden; position: relative; background: #fff0f3;
-        }
+        .modal-content h3 { color: var(--text-color); margin-bottom: 25px; font-size: 1.5rem; }
+
     </style>
 </head>
 <body>
@@ -246,14 +244,14 @@
 
     <div id="left-ribbon" class="side-ribbon">
         <div class="banner-track-vertical">
-            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
-            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v">
         </div>
     </div>
 
     <div id="right-ribbon" class="side-ribbon">
-        <div class="banner-track-vertical" style="animation-direction: reverse;"> <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
-            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+        <div class="banner-track-vertical" style="animation-direction: reverse;"> <img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+            <img src="assets/foto9.jpg" class="banner-photo-v"><img src="assets/foto8.jpg" class="banner-photo-v"><img src="assets/foto7.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
         </div>
     </div>
 
@@ -278,23 +276,11 @@
     </div>
 
     <div id="modal-confirm">
-        <div class="modal-flex-wrapper">
-            <div class="modal-ribbon-container left">
-                <div class="banner-track-vertical" style="animation-duration: 15s;">
-                    <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v">
-                </div>
-            </div>
-            <div class="modal-content-center">
-                <h3>¿Segura? :c</h3>
-                <div style="display: flex; justify-content: space-around;">
-                    <button class="btn btn-yes" onclick="irPaginaTriste()" style="padding: 10px 20px;">Sí</button>
-                    <button class="btn btn-no" onclick="cerrarModal()" style="padding: 10px 20px;">No</button>
-                </div>
-            </div>
-            <div class="modal-ribbon-container right">
-                <div class="banner-track-vertical" style="animation-duration: 18s;">
-                    <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto6.jpg" class="banner-photo-v">
-                </div>
+        <div class="modal-content">
+            <h3>¿Segura? :c</h3>
+            <div style="display: flex; justify-content: space-around;">
+                <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 1rem; padding: 10px 25px;">Sí</button>
+                <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 1rem; padding: 10px 25px;">No</button>
             </div>
         </div>
     </div>
@@ -330,11 +316,11 @@
             intro.classList.add('fade-out-up');
             bannerBottom.classList.add('fade-out');
 
-            // 2. MOSTRAR CINTAS LATERALES (Añadimos clase 'visible-ribbon')
+            // 2. MOSTRAR CINTAS LATERALES EN LA ESCENA 2
             ribbonLeft.classList.add('visible-ribbon');
             ribbonRight.classList.add('visible-ribbon');
 
-            // 3. Mostrar Escena 2
+            // 3. Mostrar Caja de Pregunta
             setTimeout(() => {
                 intro.style.display = 'none';
                 bannerBottom.style.display = 'none';
