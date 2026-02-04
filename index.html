@@ -38,8 +38,8 @@
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- CINTA DE FOTOS EN BUCLE --- */
-        #photo-banner {
+        /* --- CINTA HORIZONTAL INFERIOR (Inicio) --- */
+        #photo-banner-bottom {
             position: fixed;
             bottom: 30px;
             left: 0;
@@ -48,20 +48,19 @@
             overflow: hidden;
             z-index: 20;
             pointer-events: none;
-            /* Quitamos la transición genérica aquí, la manejaremos con animación */
+            transition: opacity 0.5s ease; /* Desvanecimiento rápido */
         }
 
-        .banner-track {
+        .banner-track-horizontal {
             display: flex;
             width: max-content;
-            /* Tiempo aumentado a 60s para 9 fotos */
             animation: scroll-left 60s linear infinite; 
         }
 
-        .banner-photo {
+        .banner-photo-h {
             height: 120px;
             width: auto;
-            margin-right: 20px; /* Espacio entre fotos */
+            margin-right: 20px;
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             opacity: 0.9;
@@ -69,26 +68,60 @@
 
         @keyframes scroll-left {
             0% { transform: translateX(0); }
-            /* Se mueve exactamente la mitad de la pista (un grupo completo de 9) */
             100% { transform: translateX(-50%); }
         }
 
-        /* --- NUEVA ANIMACIÓN DE SALIDA (Expandir a los lados) --- */
-        .spread-exit {
-            animation: spread-out-effect 1s forwards cubic-bezier(0.22, 1, 0.36, 1);
+
+        /* --- NUEVAS CINTAS VERTICALES LATERALES (Aparecen en transición) --- */
+        .side-ribbon {
+            position: fixed;
+            top: 0;
+            width: 90px; /* Ancho de la cinta lateral */
+            height: 100vh;
+            overflow: hidden;
+            z-index: 25; /* Debajo del cuadro de pregunta */
+            pointer-events: none;
+            opacity: 0.8;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1); /* Entrada suave */
         }
 
-        @keyframes spread-out-effect {
-            0% {
-                transform: scaleX(1);
-                opacity: 0.9;
-                filter: blur(0px);
-            }
-            100% {
-                transform: scaleX(3); /* Se estira horizontalmente 3 veces su tamaño */
-                opacity: 0; /* Se desvanece */
-                filter: blur(10px); /* Se desenfoca */
-            }
+        #left-ribbon {
+            left: 0;
+            /* Inicialmente oculto a la izquierda */
+            transform: translateX(-150%);
+            border-right: 2px solid rgba(255,255,255,0.3);
+        }
+
+        #right-ribbon {
+            right: 0;
+            /* Inicialmente oculto a la derecha */
+            transform: translateX(150%);
+            border-left: 2px solid rgba(255,255,255,0.3);
+        }
+
+        /* Clase para activar la entrada de las cintas */
+        .side-ribbon.active-ribbon {
+            transform: translateX(0);
+        }
+
+        .banner-track-vertical {
+            display: flex;
+            flex-direction: column;
+            /* Animación vertical hacia arriba */
+            animation: scroll-up 30s linear infinite; 
+        }
+
+        .banner-photo-v {
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        @keyframes scroll-up {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
         }
 
 
@@ -143,11 +176,15 @@
             100% { transform: scale(1); }
         }
 
-        /* Clase para desvanecer el corazón hacia arriba */
         .fade-out-up {
             transform: translateY(-100px) scale(0.8);
             opacity: 0 !important;
             pointer-events: none;
+        }
+        
+        /* Clase genérica fade-out */
+        .fade-out {
+            opacity: 0 !important;
         }
 
         /* --- Escena 2: Pregunta --- */
@@ -240,29 +277,28 @@
 
     <div id="hearts-rain-container"></div>
 
-    <div id="photo-banner">
-        <div class="banner-track">
-            <img src="assets/foto1.jpg" alt="Foto 1" class="banner-photo">
-            <img src="assets/foto2.jpg" alt="Foto 2" class="banner-photo">
-            <img src="assets/foto3.jpg" alt="Foto 3" class="banner-photo">
-            <img src="assets/foto4.jpg" alt="Foto 4" class="banner-photo">
-            <img src="assets/foto5.jpg" alt="Foto 5" class="banner-photo">
-            <img src="assets/foto6.jpg" alt="Foto 6" class="banner-photo">
-            <img src="assets/foto7.jpg" alt="Foto 7" class="banner-photo">
-            <img src="assets/foto8.jpg" alt="Foto 8" class="banner-photo">
-            <img src="assets/foto9.jpg" alt="Foto 9" class="banner-photo">
-            
-            <img src="assets/foto1.jpg" alt="Foto 1" class="banner-photo">
-            <img src="assets/foto2.jpg" alt="Foto 2" class="banner-photo">
-            <img src="assets/foto3.jpg" alt="Foto 3" class="banner-photo">
-            <img src="assets/foto4.jpg" alt="Foto 4" class="banner-photo">
-            <img src="assets/foto5.jpg" alt="Foto 5" class="banner-photo">
-            <img src="assets/foto6.jpg" alt="Foto 6" class="banner-photo">
-            <img src="assets/foto7.jpg" alt="Foto 7" class="banner-photo">
-            <img src="assets/foto8.jpg" alt="Foto 8" class="banner-photo">
-            <img src="assets/foto9.jpg" alt="Foto 9" class="banner-photo">
+    <div id="photo-banner-bottom">
+        <div class="banner-track-horizontal">
+            <img src="assets/foto1.jpg" class="banner-photo-h"><img src="assets/foto2.jpg" class="banner-photo-h"><img src="assets/foto3.jpg" class="banner-photo-h"><img src="assets/foto4.jpg" class="banner-photo-h"><img src="assets/foto5.jpg" class="banner-photo-h"><img src="assets/foto6.jpg" class="banner-photo-h"><img src="assets/foto7.jpg" class="banner-photo-h"><img src="assets/foto8.jpg" class="banner-photo-h"><img src="assets/foto9.jpg" class="banner-photo-h">
+            <img src="assets/foto1.jpg" class="banner-photo-h"><img src="assets/foto2.jpg" class="banner-photo-h"><img src="assets/foto3.jpg" class="banner-photo-h"><img src="assets/foto4.jpg" class="banner-photo-h"><img src="assets/foto5.jpg" class="banner-photo-h"><img src="assets/foto6.jpg" class="banner-photo-h"><img src="assets/foto7.jpg" class="banner-photo-h"><img src="assets/foto8.jpg" class="banner-photo-h"><img src="assets/foto9.jpg" class="banner-photo-h">
         </div>
     </div>
+
+    <div id="left-ribbon" class="side-ribbon">
+        <div class="banner-track-vertical">
+             <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
+        </div>
+    </div>
+
+    <div id="right-ribbon" class="side-ribbon">
+        <div class="banner-track-vertical">
+            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+            <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+        </div>
+    </div>
+
+
     <div class="container">
         <div id="scene-intro">
             <svg class="heart-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -308,7 +344,10 @@
 
         // --- REFERENCIAS ---
         const intro = document.getElementById('scene-intro');
-        const banner = document.getElementById('photo-banner');
+        const bannerBottom = document.getElementById('photo-banner-bottom');
+        const ribbonLeft = document.getElementById('left-ribbon');
+        const ribbonRight = document.getElementById('right-ribbon');
+        
         const question = document.getElementById('scene-question');
         const textElement = document.getElementById('typing-text');
         const buttons = document.getElementById('buttons');
@@ -317,19 +356,23 @@
 
         // --- TRANSICIÓN ---
         intro.addEventListener('click', () => {
-            // 1. El corazón se va hacia arriba y desaparece
+            // 1. El corazón se va hacia arriba
             intro.classList.add('fade-out-up');
             
-            // 2. APLICAMOS LA NUEVA ANIMACIÓN DE "EXPANDIR" A LA CINTA
-            banner.classList.add('spread-exit'); 
+            // 2. La cinta de abajo desaparece rápido
+            bannerBottom.classList.add('fade-out'); 
 
-            // Esperamos 1 segundo (duración de la animación spread-exit)
+            // 3. Aparecen las cintas laterales (se deslizan desde los lados)
+            ribbonLeft.classList.add('active-ribbon');
+            ribbonRight.classList.add('active-ribbon');
+
+            // Esperamos 1 segundo para mostrar la pregunta
             setTimeout(() => {
                 intro.style.display = 'none';
-                banner.style.display = 'none'; // Ocultar banner completamente
+                bannerBottom.style.display = 'none'; 
                 question.classList.add('visible');
                 typeWriter();
-            }, 1000); // Esperamos 1000ms (1s)
+            }, 1000);
         });
 
         // --- MÁQUINA DE ESCRIBIR ---
@@ -347,7 +390,6 @@
         // --- BOTONES ---
         function aceptar() {
             const title = "Cita de San Valentín ❤️";
-            // FECHAS PARA TODO EL DÍA 14 DE FEB
             const start = "20260214"; 
             const end = "20260215"; 
             const details = "¡Dijiste que sí!";
