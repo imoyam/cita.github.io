@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cita de chikiwawis ❤️</title>
+    <title>Para ti ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -19,28 +19,26 @@
             margin: 0;
             padding: 0;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             background: radial-gradient(circle, var(--bg-color) 0%, #ffc2d1 100%);
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
             position: relative;
         }
 
-        /* --- FONDO DE CORAZONES CAYENDO --- */
+        /* --- LLUVIA DE CORAZONES --- */
         .heart-rain {
             position: fixed;
             top: -10%;
             color: rgba(255, 77, 109, 0.6);
-            z-index: 0; /* Al fondo */
+            z-index: 0;
             animation: fall linear infinite;
         }
-
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
+
+        /* --- NUEVO: CINTA DE FOTOS EN BUCLE --- */
         #photo-banner {
             position: fixed;
             bottom: 30px; /* Espacio desde abajo */
@@ -76,19 +74,29 @@
                Al llegar a la mitad, es idéntico al inicio y se reinicia invisiblemente. */
             100% { transform: translateX(-50%); }
         }
-        /* Contenedor principal */
+
+
+        /* --- CONTENEDOR PRINCIPAL (GRID CENTRADO) --- */
         .container {
             position: relative;
-            z-index: 10;
+            z-index: 30; /* Encima de la cinta de fotos */
             width: 100%;
             height: 100vh;
-            display: grid; /* Usamos Grid en lugar de Flex */
-            place-items: center; /* Centra todo perfectamente horizontal y vertical */
+            display: grid;
+            place-items: center;
         }
 
-        /* --- Estilos Escenas (Igual que antes) --- */
+        #scene-intro, #scene-question {
+            grid-area: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* --- Escena 1: Corazón --- */
         #scene-intro {
-            text-align: center;
             cursor: pointer;
             transition: transform 0.8s ease, opacity 0.8s ease;
         }
@@ -108,6 +116,7 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             pointer-events: none;
             margin-top: -40px;
+            text-align: center;
         }
 
         @keyframes latido {
@@ -118,24 +127,28 @@
             100% { transform: scale(1); }
         }
 
+        /* Clase genérica para desvanecer elementos */
         .fade-out {
-            transform: translateY(-100px) scale(0.5);
-            opacity: 0;
+            opacity: 0 !important;
             pointer-events: none;
         }
 
-        /* --- Escena Pregunta --- */
+        /* --- Escena 2: Pregunta --- */
         #scene-question {
-            text-align: center;
             opacity: 0;
             pointer-events: none;
             transition: opacity 1s ease;
             max-width: 600px;
+        }
+
+        .question-box {
             padding: 40px;
             background: rgba(255, 255, 255, 0.6);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(8px);
+            text-align: center;
+            width: 80%;
         }
 
         .visible {
@@ -179,7 +192,7 @@
         #modal-confirm {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); /* Fondo oscuro */
+            background: rgba(0,0,0,0.5);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -210,6 +223,19 @@
 
     <div id="hearts-rain-container"></div>
 
+    <div id="photo-banner">
+        <div class="banner-track">
+            <img src="assets/foto1.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto2.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto3.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto4.jpg" alt="Nosotros" class="banner-photo">
+            
+            <img src="assets/foto1.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto2.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto3.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto4.jpg" alt="Nosotros" class="banner-photo">
+        </div>
+    </div>
     <div class="container">
         <div id="scene-intro">
             <svg class="heart-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -219,10 +245,12 @@
         </div>
 
         <div id="scene-question">
-            <div id="typing-text"></div>
-            <div class="btn-group" id="buttons">
-                <button class="btn btn-yes" onclick="aceptar()">SIII, SI QUIEROO</button>
-                <button class="btn btn-no" onclick="confirmarRechazo()">mmm no k asko...</button>
+            <div class="question-box">
+                <div id="typing-text"></div>
+                <div class="btn-group" id="buttons">
+                    <button class="btn btn-yes" onclick="aceptar()">¡Sí, claro que sí!</button>
+                    <button class="btn btn-no" onclick="confirmarRechazo()">No...</button>
+                </div>
             </div>
         </div>
     </div>
@@ -231,50 +259,50 @@
         <div class="modal-content">
             <h3>¿Segura? :c</h3>
             <div style="display: flex; justify-content: space-around;">
-                <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí estoy con el otro</button>
-                <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No, te amo mucho :3</button>
+                <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí</button>
+                <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- LOGICA LLUVIA DE CORAZONES ---
+        // --- LOGICA LLUVIA ---
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart-rain');
-            heart.innerHTML = '❤'; // Puede ser un emoji o un svg pequeño
+            heart.innerHTML = '❤';
             heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = Math.random() * 2 + 3 + "s"; // Entre 3 y 5 segundos
-            heart.style.fontSize = Math.random() * 20 + 10 + "px"; // Tamaño variable
-            
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s";
+            heart.style.fontSize = Math.random() * 20 + 10 + "px";
             document.getElementById('hearts-rain-container').appendChild(heart);
-            
-            // Borrar el corazón cuando termine la animación para no saturar memoria
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
+            setTimeout(() => { heart.remove(); }, 5000);
         }
-        setInterval(createHeart, 300); // Genera un corazón cada 300ms
+        setInterval(createHeart, 300);
 
-        // --- VARIABLES ---
+        // --- REFERENCIAS ---
         const intro = document.getElementById('scene-intro');
+        const banner = document.getElementById('photo-banner'); // Referencia al banner
         const question = document.getElementById('scene-question');
         const textElement = document.getElementById('typing-text');
         const buttons = document.getElementById('buttons');
         const modal = document.getElementById('modal-confirm');
         const message = "¿Te gustaría ser mi San Valentín? 🌹";
 
-        // 1. Transición Inicial
+        // --- TRANSICIÓN ---
         intro.addEventListener('click', () => {
+            // Desvanecer el corazón Y la cinta de fotos
             intro.classList.add('fade-out');
+            banner.classList.add('fade-out'); 
+
             setTimeout(() => {
                 intro.style.display = 'none';
+                banner.style.display = 'none'; // Ocultar banner completamente
                 question.classList.add('visible');
                 typeWriter();
             }, 800);
         });
 
-        // 2. Máquina de Escribir
+        // --- MÁQUINA DE ESCRIBIR ---
         let i = 0;
         function typeWriter() {
             if (i < message.length) {
@@ -286,24 +314,18 @@
             }
         }
 
-        // 3. Funciones de Botones
+        // --- BOTONES ---
         function aceptar() {
             const title = "Cita de San Valentín ❤️";
-            
-            // Para eventos de todo el día, usamos formato YYYYMMDD (sin hora)
-            // Start: 14 de Febrero
-            // End: 15 de Febrero (esto cubre todo el día 14 hasta el inicio del 15)
+            // FECHAS CORREGIDAS PARA TODO EL DÍA
             const start = "20260214"; 
             const end = "20260215"; 
-            
-            const details = "¡Dijiste que sí! ❤️ Prepárate para un día especial.";
+            const details = "¡Dijiste que sí!";
             const location = "Lugar Sorpresa";
-
-            // Generamos la URL
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
-            
             window.open(url, '_blank');
         }
+
         function confirmarRechazo() {
             modal.classList.add('show-modal');
         }
@@ -313,7 +335,6 @@
         }
 
         function irPaginaTriste() {
-    // El ./ fuerza a buscar en el directorio actual
             window.location.href = "./no.html";
         }
     </script>
