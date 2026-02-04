@@ -48,7 +48,7 @@
             overflow: hidden;
             z-index: 20;
             pointer-events: none;
-            transition: opacity 0.5s ease; /* Desvanecimiento rápido */
+            transition: opacity 0.5s ease;
         }
 
         .banner-track-horizontal {
@@ -72,34 +72,31 @@
         }
 
 
-        /* --- NUEVAS CINTAS VERTICALES LATERALES (Aparecen en transición) --- */
+        /* --- CINTAS VERTICALES LATERALES (Principales) --- */
         .side-ribbon {
             position: fixed;
             top: 0;
-            width: 90px; /* Ancho de la cinta lateral */
+            width: 90px;
             height: 100vh;
             overflow: hidden;
-            z-index: 25; /* Debajo del cuadro de pregunta */
+            z-index: 25;
             pointer-events: none;
             opacity: 0.8;
-            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1); /* Entrada suave */
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         #left-ribbon {
             left: 0;
-            /* Inicialmente oculto a la izquierda */
             transform: translateX(-150%);
             border-right: 2px solid rgba(255,255,255,0.3);
         }
 
         #right-ribbon {
             right: 0;
-            /* Inicialmente oculto a la derecha */
             transform: translateX(150%);
             border-left: 2px solid rgba(255,255,255,0.3);
         }
 
-        /* Clase para activar la entrada de las cintas */
         .side-ribbon.active-ribbon {
             transform: translateX(0);
         }
@@ -107,7 +104,6 @@
         .banner-track-vertical {
             display: flex;
             flex-direction: column;
-            /* Animación vertical hacia arriba */
             animation: scroll-up 30s linear infinite; 
         }
 
@@ -144,7 +140,6 @@
             width: 100%;
         }
 
-        /* --- Escena 1: Corazón --- */
         #scene-intro {
             cursor: pointer;
             transition: transform 0.8s ease, opacity 0.8s ease;
@@ -182,7 +177,6 @@
             pointer-events: none;
         }
         
-        /* Clase genérica fade-out */
         .fade-out {
             opacity: 0 !important;
         }
@@ -242,11 +236,11 @@
         .btn-yes { background-color: var(--btn-yes); }
         .btn-no { background-color: var(--btn-no); }
 
-        /* --- MODAL (POP UP) --- */
+        /* --- ESTILOS DEL MODAL (ACTUALIZADOS) --- */
         #modal-confirm {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6); /* Fondo un poco más oscuro */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -261,16 +255,38 @@
             pointer-events: auto;
         }
 
-        .modal-content {
+        /* Contenedor flexible para alinear cintas y contenido central */
+        .modal-flex-wrapper {
+            display: flex;
+            align-items: stretch; /* Estira las cintas a la altura del contenido */
             background: white;
-            padding: 30px;
             border-radius: 15px;
+            overflow: hidden; /* Para recortar las esquinas de las cintas */
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            max-height: 70vh; /* Altura máxima del modal */
+        }
+
+        /* Contenedor central blanco */
+        .modal-content-center {
+            padding: 30px;
             text-align: center;
             width: 300px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            z-index: 2;
+            background: white;
         }
         
-        .modal-content h3 { color: var(--text-color); margin-bottom: 20px; }
+        /* Contenedores de las cintas laterales del modal */
+        .modal-ribbon-container {
+            width: 70px; /* Ancho de las cintas del modal */
+            overflow: hidden;
+            position: relative;
+            background: #fff0f3; /* Fondo rosito claro para las cintas */
+        }
+
+        .modal-content-center h3 { color: var(--text-color); margin-bottom: 20px; }
     </style>
 </head>
 <body>
@@ -286,11 +302,10 @@
 
     <div id="left-ribbon" class="side-ribbon">
         <div class="banner-track-vertical">
-             <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
+            <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
             <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto5.jpg" class="banner-photo-v">
         </div>
     </div>
-
     <div id="right-ribbon" class="side-ribbon">
         <div class="banner-track-vertical">
             <img src="assets/foto5.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
@@ -319,15 +334,31 @@
     </div>
 
     <div id="modal-confirm">
-        <div class="modal-content">
-            <h3>¿Segura? :c</h3>
-            <div style="display: flex; justify-content: space-around;">
-                <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí</button>
-                <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No</button>
+        <div class="modal-flex-wrapper">
+            
+            <div class="modal-ribbon-container left">
+                <div class="banner-track-vertical" style="animation-duration: 25s;"> <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v">
+                    <img src="assets/foto1.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto4.jpg" class="banner-photo-v">
+                </div>
             </div>
+
+            <div class="modal-content-center">
+                <h3>¿Segura? :c</h3>
+                <div style="display: flex; justify-content: space-around;">
+                    <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí</button>
+                    <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No</button>
+                </div>
+            </div>
+
+            <div class="modal-ribbon-container right">
+                <div class="banner-track-vertical" style="animation-duration: 28s;">
+                     <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+                    <img src="assets/foto4.jpg" class="banner-photo-v"><img src="assets/foto3.jpg" class="banner-photo-v"><img src="assets/foto2.jpg" class="banner-photo-v"><img src="assets/foto1.jpg" class="banner-photo-v">
+                </div>
+            </div>
+
         </div>
     </div>
-
     <script>
         // --- LOGICA LLUVIA ---
         function createHeart() {
@@ -356,17 +387,11 @@
 
         // --- TRANSICIÓN ---
         intro.addEventListener('click', () => {
-            // 1. El corazón se va hacia arriba
             intro.classList.add('fade-out-up');
-            
-            // 2. La cinta de abajo desaparece rápido
             bannerBottom.classList.add('fade-out'); 
-
-            // 3. Aparecen las cintas laterales (se deslizan desde los lados)
             ribbonLeft.classList.add('active-ribbon');
             ribbonRight.classList.add('active-ribbon');
 
-            // Esperamos 1 segundo para mostrar la pregunta
             setTimeout(() => {
                 intro.style.display = 'none';
                 bannerBottom.style.display = 'none'; 
