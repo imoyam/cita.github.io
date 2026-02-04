@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* --- ESTILOS CSS --- */
         :root {
             --bg-color: #ffeef2;
             --heart-color: #ff4d6d;
@@ -26,11 +25,27 @@
             background: radial-gradient(circle, var(--bg-color) 0%, #ffc2d1 100%);
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
+            position: relative;
         }
 
-        /* Contenedor de las escenas superpuestas */
+        /* --- FONDO DE CORAZONES CAYENDO --- */
+        .heart-rain {
+            position: fixed;
+            top: -10%;
+            color: rgba(255, 77, 109, 0.6);
+            z-index: 0; /* Al fondo */
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Contenedor principal */
         .container {
             position: relative;
+            z-index: 10; /* Encima de la lluvia */
             width: 100%;
             height: 100vh;
             display: flex;
@@ -38,16 +53,13 @@
             align-items: center;
         }
 
-        /* --- Escena 1: El Corazón --- */
+        /* --- Estilos Escenas (Igual que antes) --- */
         #scene-intro {
             text-align: center;
             cursor: pointer;
             transition: transform 0.8s ease, opacity 0.8s ease;
-            position: absolute; /* Para que esté centrado sobre todo */
-            z-index: 10;
         }
 
-        /* El dibujo del corazón (SVG) */
         .heart-svg {
             width: 300px;
             height: 300px;
@@ -57,14 +69,12 @@
         }
 
         .click-hint {
-            margin-top: -40px; /* Subirlo un poco */
             color: white;
             font-weight: bold;
             font-size: 1.2rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
             pointer-events: none;
-            position: relative;
-            z-index: 2;
+            margin-top: -40px;
         }
 
         @keyframes latido {
@@ -75,22 +85,21 @@
             100% { transform: scale(1); }
         }
 
-        /* Clase para ocultar la intro */
         .fade-out {
             transform: translateY(-100px) scale(0.5);
             opacity: 0;
             pointer-events: none;
         }
 
-        /* --- Escena 2: La Pregunta --- */
+        /* --- Escena Pregunta --- */
         #scene-question {
             text-align: center;
-            opacity: 0; /* Empieza invisible */
-            pointer-events: none; /* No se puede tocar hasta que aparezca */
+            opacity: 0;
+            pointer-events: none;
             transition: opacity 1s ease;
             max-width: 600px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.4);
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.6);
             border-radius: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             backdrop-filter: blur(8px);
@@ -109,12 +118,11 @@
             margin-bottom: 30px;
         }
 
-        /* Botones */
         .btn-group {
             display: flex;
             justify-content: center;
             gap: 20px;
-            opacity: 0; /* Ocultos hasta que termine de escribir */
+            opacity: 0; 
             transition: opacity 0.5s ease;
         }
 
@@ -134,12 +142,42 @@
         .btn-yes { background-color: var(--btn-yes); }
         .btn-no { background-color: var(--btn-no); }
 
+        /* --- MODAL (POP UP) --- */
+        #modal-confirm {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); /* Fondo oscuro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        #modal-confirm.show-modal {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .modal-content h3 { color: var(--text-color); margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
+    <div id="hearts-rain-container"></div>
+
     <div class="container">
-        
         <div id="scene-intro">
             <svg class="heart-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
@@ -151,66 +189,92 @@
             <div id="typing-text"></div>
             <div class="btn-group" id="buttons">
                 <button class="btn btn-yes" onclick="aceptar()">¡Sí, claro que sí!</button>
-                <button class="btn btn-no" onclick="location.href='no.html'">No...</button>
+                <button class="btn btn-no" onclick="confirmarRechazo()">No...</button>
             </div>
         </div>
+    </div>
 
+    <div id="modal-confirm">
+        <div class="modal-content">
+            <h3>¿Segura? :c</h3>
+            <div style="display: flex; justify-content: space-around;">
+                <button class="btn btn-yes" onclick="irPaginaTriste()" style="font-size: 0.9rem; padding: 10px 20px;">Sí</button>
+                <button class="btn btn-no" onclick="cerrarModal()" style="font-size: 0.9rem; padding: 10px 20px;">No</button>
+            </div>
+        </div>
     </div>
 
     <script>
-        // --- LÓGICA JAVASCRIPT ---
+        // --- LOGICA LLUVIA DE CORAZONES ---
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-rain');
+            heart.innerHTML = '❤'; // Puede ser un emoji o un svg pequeño
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 2 + 3 + "s"; // Entre 3 y 5 segundos
+            heart.style.fontSize = Math.random() * 20 + 10 + "px"; // Tamaño variable
+            
+            document.getElementById('hearts-rain-container').appendChild(heart);
+            
+            // Borrar el corazón cuando termine la animación para no saturar memoria
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+        setInterval(createHeart, 300); // Genera un corazón cada 300ms
 
+        // --- VARIABLES ---
         const intro = document.getElementById('scene-intro');
         const question = document.getElementById('scene-question');
         const textElement = document.getElementById('typing-text');
         const buttons = document.getElementById('buttons');
-
-        // Mensaje a escribir
+        const modal = document.getElementById('modal-confirm');
         const message = "¿Te gustaría ser mi San Valentín? 🌹";
 
-        // 1. Al hacer click en el corazón
+        // 1. Transición Inicial
         intro.addEventListener('click', () => {
-            intro.classList.add('fade-out'); // Desvanece el corazón
-            
-            // Espera 800ms a que termine la animación y muestra la pregunta
+            intro.classList.add('fade-out');
             setTimeout(() => {
-                intro.style.display = 'none'; // Lo quita del todo
-                question.classList.add('visible'); // Muestra el contenedor de pregunta
-                typeWriter(); // Arranca el efecto de escribir
+                intro.style.display = 'none';
+                question.classList.add('visible');
+                typeWriter();
             }, 800);
         });
 
-        // 2. Efecto Máquina de Escribir
+        // 2. Máquina de Escribir
         let i = 0;
         function typeWriter() {
             if (i < message.length) {
                 textElement.innerHTML += message.charAt(i);
                 i++;
-                setTimeout(typeWriter, 50); // Velocidad de escritura
+                setTimeout(typeWriter, 50);
             } else {
-                // Cuando termina de escribir, muestra los botones
                 buttons.style.opacity = '1';
             }
         }
 
-        // 3. Función del botón SÍ
+        // 3. Funciones de Botones
         function aceptar() {
-            // Título del evento
             const title = "Cita de San Valentín ❤️";
-            // Fechas (Formato YYYYMMDDTHHmmss) - Ejemplo: 14 Feb 2026 de 20:00 a 23:00
             const start = "20260214T200000"; 
             const end = "20260214T230000";
-            const details = "¡Dijiste que sí! Prepárate para una noche especial.";
-            const location = "Sorpresa";
-
-            // Crear URL de Google Calendar
+            const details = "¡Dijiste que sí!";
+            const location = "Lugar Sorpresa";
             const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&location=${encodeURIComponent(location)}`;
-            
-            // Abrir en nueva pestaña
             window.open(url, '_blank');
-            alert("¡Sabía que dirías que sí! ❤️ Revisa tu calendario.");
+        }
+
+        function confirmarRechazo() {
+            modal.classList.add('show-modal');
+        }
+
+        function cerrarModal() {
+            modal.classList.remove('show-modal');
+        }
+
+        function irPaginaTriste() {
+            window.location.href = "no.html";
         }
     </script>
-
 </body>
 </html>
