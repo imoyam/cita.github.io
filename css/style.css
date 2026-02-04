@@ -1,100 +1,111 @@
 :root {
-    --color-fondo: #ffeef2;
-    --color-corazon: #ff4d6d;
-    --color-texto: #ffffff;
-    --color-boton: #ff758f;
+    /* Paleta de colores basada en la imagen */
+    --bg-gradient-start: #ffe6ea;
+    --bg-gradient-end: #ffcddf;
+    --heart-color: #ff4f70; /* Un rosa intenso "hot pink" */
+    --text-color-light: #ffffff;
+    --text-color-dark: #d6335c;
 }
 
 body {
     margin: 0;
     padding: 0;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: radial-gradient(circle, var(--color-fondo) 0%, #ffc2d1 100%);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Degradado suave como en la imagen */
+    background: radial-gradient(circle at center, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    font-family: 'Montserrat', sans-serif;
     overflow: hidden;
 }
 
-.container {
-    text-align: center;
-}
-
-/* Construcción del Corazón con CSS */
-.heart {
-    position: relative;
-    width: 300px;
-    height: 260px;
-    background-color: var(--color-corazon);
-    margin: 0 auto 50px;
-    transform: rotate(-45deg);
+/* --- Configuración de Escenas --- */
+.scene {
+    position: absolute;
+    width: 100%;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 10px 30px rgba(255, 77, 109, 0.5);
-    animation: heartbeat 1.5s infinite; /* Llamada a la animación */
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
 }
 
-.heart::before,
-.heart::after {
-    content: "";
-    position: absolute;
-    width: 300px;
-    height: 300px;
-    background-color: var(--color-corazon);
-    border-radius: 50%;
+/* Clase para ocultar elementos */
+.hidden {
+    display: none !important;
+    opacity: 0;
 }
 
-.heart::before {
-    top: -150px;
-    left: 0;
+/* Clase para desvanecer la escena de intro */
+.fade-out-up {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.9);
 }
 
-.heart::after {
-    top: 0;
-    left: 150px;
-}
-
-/* Contenedor del texto dentro del corazón */
-.text-container {
-    transform: rotate(45deg); /* Para que el texto se vea derecho */
-    z-index: 10;
-    color: var(--color-texto);
-    font-size: 1.5rem;
-    font-weight: bold;
-    max-width: 200px;
-    line-height: 1.4;
-}
-
-/* Animación de Latido */
-@keyframes heartbeat {
-    0% { transform: rotate(-45deg) scale(1); }
-    20% { transform: rotate(-45deg) scale(1.1); }
-    40% { transform: rotate(-45deg) scale(1); }
-    60% { transform: rotate(-45deg) scale(1.2); }
-    100% { transform: rotate(-45deg) scale(1); }
-}
-
-/* Botones */
-.buttons {
-    margin-top: 20px;
-}
-
-.btn {
-    padding: 15px 30px;
-    font-size: 1.1rem;
-    margin: 0 10px;
-    border: none;
-    border-radius: 25px;
+/* --- Estilos Escena 1: Corazón Grande --- */
+.heart-container-big {
+    position: relative;
+    width: 350px; /* Tamaño del corazón */
+    height: 350px;
     cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-    background-color: var(--color-boton);
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /* Animación suave de latido al pasar el mouse */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.btn:hover {
-    transform: scale(1.1);
-    background-color: #ff4d6d;
+.heart-container-big:hover {
+    transform: scale(1.05);
+}
+
+/* El SVG del corazón perfecto */
+.perfect-heart {
+    width: 100%;
+    height: 100%;
+    fill: var(--heart-color);
+    /* Sombra suave externa para dar volumen */
+    filter: drop-shadow(0px 10px 20px rgba(255, 79, 112, 0.4));
+}
+
+.click-text {
+    position: absolute;
+    bottom: 25%; /* Posición ajustada dentro del corazón */
+    left: 0;
+    width: 100%;
+    color: var(--text-color-light);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    pointer-events: none; /* Para que el click atraviese el texto y dé en el corazón */
+}
+
+
+/* --- Estilos Escena 2 (Preparación para el siguiente paso) --- */
+.content-box {
+    background: rgba(255, 255, 255, 0.3); /* Fondo semitransparente */
+    padding: 40px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px); /* Efecto cristal */
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    text-align: center;
+    max-width: 80%;
+}
+
+.text-area {
+    font-size: 1.5rem;
+    color: var(--text-color-dark);
+    min-height: 100px; /* Espacio reservado para el texto */
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+/* El cursor que parpadea */
+.cursor {
+    animation: blink 1s infinite;
+    color: var(--text-color-dark);
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }

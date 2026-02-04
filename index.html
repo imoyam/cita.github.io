@@ -3,22 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Quieres ser mi cita?</title>
+    <title>Para ti...</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="heart">
-            <div class="text-container">
-                <p id="typing-text"></p>
-            </div>
-        </div>
 
-        <div class="buttons">
-            <button id="btn-si" class="btn">¡Sí, acepto!</button>
-            <button id="btn-no" class="btn">Mmm, no...</button>
+    <div id="intro-scene" class="scene">
+        <div class="heart-container-big" id="start-btn">
+            <svg class="perfect-heart" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <p class="click-text">Click to begin...</p>
         </div>
     </div>
+
+
+    <div id="question-scene" class="scene hidden">
+        <div class="content-box">
+            <div class="text-area">
+                <p id="typing-text"></p>
+                <span class="cursor">|</span>
+            </div>
+            
+            <div class="buttons-container hidden" id="btns-box">
+                <button id="btn-si" class="btn btn-yes">¡Sí, acepto!</button>
+                <button id="btn-no" class="btn btn-no">No...</button>
+            </div>
+        </div>
+    </div>
+
 
     <script src="js/main.js"></script>
 </body>
