@@ -38,48 +38,64 @@
             100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
         }
 
-        /* --- NUEVO: CINTA DE FOTOS EN BUCLE --- */
+        /* --- CINTA DE FOTOS EN BUCLE --- */
         #photo-banner {
             position: fixed;
-            bottom: 30px; /* Espacio desde abajo */
+            bottom: 30px;
             left: 0;
             width: 100%;
-            height: 120px; /* Altura de la cinta */
+            height: 120px;
             overflow: hidden;
-            z-index: 20; /* Por encima del fondo */
-            transition: opacity 0.8s ease; /* Para que desaparezca suave */
-            pointer-events: none; /* Para que no interfiera con clicks */
+            z-index: 20;
+            pointer-events: none;
+            /* Quitamos la transición genérica aquí, la manejaremos con animación */
         }
 
         .banner-track {
             display: flex;
-            width: max-content; /* El ancho se adapta al contenido */
-            /* La animación mueve la pista la mitad de su longitud total */
-            animation: scroll-left 20s linear infinite; 
+            width: max-content;
+            /* Tiempo aumentado a 60s para 9 fotos */
+            animation: scroll-left 60s linear infinite; 
         }
 
         .banner-photo {
-            height: 120px; /* Ajustar a la altura del contenedor */
-            width: auto; /* Mantiene proporción */
+            height: 120px;
+            width: auto;
             margin-right: 20px; /* Espacio entre fotos */
             border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             opacity: 0.9;
         }
 
-        /* Animación para mover la cinta a la izquierda */
         @keyframes scroll-left {
             0% { transform: translateX(0); }
-            /* IMPORTANTE: Se mueve -50% porque duplicamos las fotos. 
-               Al llegar a la mitad, es idéntico al inicio y se reinicia invisiblemente. */
+            /* Se mueve exactamente la mitad de la pista (un grupo completo de 9) */
             100% { transform: translateX(-50%); }
         }
 
+        /* --- NUEVA ANIMACIÓN DE SALIDA (Expandir a los lados) --- */
+        .spread-exit {
+            animation: spread-out-effect 1s forwards cubic-bezier(0.22, 1, 0.36, 1);
+        }
 
-        /* --- CONTENEDOR PRINCIPAL (GRID CENTRADO) --- */
+        @keyframes spread-out-effect {
+            0% {
+                transform: scaleX(1);
+                opacity: 0.9;
+                filter: blur(0px);
+            }
+            100% {
+                transform: scaleX(3); /* Se estira horizontalmente 3 veces su tamaño */
+                opacity: 0; /* Se desvanece */
+                filter: blur(10px); /* Se desenfoca */
+            }
+        }
+
+
+        /* --- CONTENEDOR PRINCIPAL --- */
         .container {
             position: relative;
-            z-index: 30; /* Encima de la cinta de fotos */
+            z-index: 30;
             width: 100%;
             height: 100vh;
             display: grid;
@@ -127,8 +143,9 @@
             100% { transform: scale(1); }
         }
 
-        /* Clase genérica para desvanecer elementos */
-        .fade-out {
+        /* Clase para desvanecer el corazón hacia arriba */
+        .fade-out-up {
+            transform: translateY(-100px) scale(0.8);
             opacity: 0 !important;
             pointer-events: none;
         }
@@ -225,15 +242,25 @@
 
     <div id="photo-banner">
         <div class="banner-track">
-            <img src="assets/foto1.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto2.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto3.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto4.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto1.jpg" alt="Foto 1" class="banner-photo">
+            <img src="assets/foto2.jpg" alt="Foto 2" class="banner-photo">
+            <img src="assets/foto3.jpg" alt="Foto 3" class="banner-photo">
+            <img src="assets/foto4.jpg" alt="Foto 4" class="banner-photo">
+            <img src="assets/foto5.jpg" alt="Foto 5" class="banner-photo">
+            <img src="assets/foto6.jpg" alt="Foto 6" class="banner-photo">
+            <img src="assets/foto7.jpg" alt="Foto 7" class="banner-photo">
+            <img src="assets/foto8.jpg" alt="Foto 8" class="banner-photo">
+            <img src="assets/foto9.jpg" alt="Foto 9" class="banner-photo">
             
-            <img src="assets/foto1.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto2.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto3.jpg" alt="Nosotros" class="banner-photo">
-            <img src="assets/foto4.jpg" alt="Nosotros" class="banner-photo">
+            <img src="assets/foto1.jpg" alt="Foto 1" class="banner-photo">
+            <img src="assets/foto2.jpg" alt="Foto 2" class="banner-photo">
+            <img src="assets/foto3.jpg" alt="Foto 3" class="banner-photo">
+            <img src="assets/foto4.jpg" alt="Foto 4" class="banner-photo">
+            <img src="assets/foto5.jpg" alt="Foto 5" class="banner-photo">
+            <img src="assets/foto6.jpg" alt="Foto 6" class="banner-photo">
+            <img src="assets/foto7.jpg" alt="Foto 7" class="banner-photo">
+            <img src="assets/foto8.jpg" alt="Foto 8" class="banner-photo">
+            <img src="assets/foto9.jpg" alt="Foto 9" class="banner-photo">
         </div>
     </div>
     <div class="container">
@@ -281,7 +308,7 @@
 
         // --- REFERENCIAS ---
         const intro = document.getElementById('scene-intro');
-        const banner = document.getElementById('photo-banner'); // Referencia al banner
+        const banner = document.getElementById('photo-banner');
         const question = document.getElementById('scene-question');
         const textElement = document.getElementById('typing-text');
         const buttons = document.getElementById('buttons');
@@ -290,16 +317,19 @@
 
         // --- TRANSICIÓN ---
         intro.addEventListener('click', () => {
-            // Desvanecer el corazón Y la cinta de fotos
-            intro.classList.add('fade-out');
-            banner.classList.add('fade-out'); 
+            // 1. El corazón se va hacia arriba y desaparece
+            intro.classList.add('fade-out-up');
+            
+            // 2. APLICAMOS LA NUEVA ANIMACIÓN DE "EXPANDIR" A LA CINTA
+            banner.classList.add('spread-exit'); 
 
+            // Esperamos 1 segundo (duración de la animación spread-exit)
             setTimeout(() => {
                 intro.style.display = 'none';
                 banner.style.display = 'none'; // Ocultar banner completamente
                 question.classList.add('visible');
                 typeWriter();
-            }, 800);
+            }, 1000); // Esperamos 1000ms (1s)
         });
 
         // --- MÁQUINA DE ESCRIBIR ---
@@ -317,7 +347,7 @@
         // --- BOTONES ---
         function aceptar() {
             const title = "Cita de San Valentín ❤️";
-            // FECHAS CORREGIDAS PARA TODO EL DÍA
+            // FECHAS PARA TODO EL DÍA 14 DE FEB
             const start = "20260214"; 
             const end = "20260215"; 
             const details = "¡Dijiste que sí!";
